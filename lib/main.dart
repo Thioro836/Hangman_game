@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:hangman_game/screens/game_screen.dart';
 
 void main() {
   runApp(const HangManApp());
@@ -54,7 +55,10 @@ class _HomeScreenState extends State<HomeScreen> {
             SizedBox(height: 40),
             ElevatedButton(
               onPressed: () {
-                //TODO: Naviguer vers l'écran du jeu
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) => const GameScreen()),
+                );
               },
               style: ElevatedButton.styleFrom(
                 backgroundColor: Colors.deepPurple,
