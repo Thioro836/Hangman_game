@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'dart:math';
 import 'package:hangman_game/data/word_list.dart';
+import 'package:hangman_game/models/word.dart';
 
 class GameScreen extends StatefulWidget {
   const GameScreen({super.key});
@@ -10,7 +11,7 @@ class GameScreen extends StatefulWidget {
 }
 
 class _GameScreenState extends State<GameScreen> {
-  late String _wordToGuess;
+  late Word _currentWord;
   Set<String> _guessedLetters = {};
   int _errors = 0;
   final int _maxErrors = 6;
@@ -24,14 +25,14 @@ class _GameScreenState extends State<GameScreen> {
   void _startNewGame() {
     final random = Random();
     setState(() {
-      _wordToGuess = wordList[random.nextInt(wordList.length)];
+      _currentWord = wordList[random.nextInt(wordList.length)];
       _guessedLetters = {};
       _errors = 0;
     });
   }
 
   String _getDisplayedWord() {
-    return _wordToGuess
+    return _currentWord.word
         .split('')
         .map((letter) => _guessedLetters.contains(letter) ? letter : '_')
         .join(' ');
@@ -40,19 +41,19 @@ class _GameScreenState extends State<GameScreen> {
   void _guessLetter(String letter) {
     setState(() {
       _guessedLetters.add(letter);
-      if (!_wordToGuess.contains(letter)) {
+      if (!_currentWord.word.contains(letter)) {
         _errors++;
       }
     });
     if (_hasWon()) {
-      _showEndDialog('🎉 Bravo !', 'Vous avez trouvé le mot : $_wordToGuess');
+      _showEndDialog('🎉 Bravo !', 'Vous avez trouvé le mot : ${_currentWord.word}');
     } else if (_hasLost()) {
-      _showEndDialog('😢 Perdu !', 'Le mot était : $_wordToGuess');
+      _showEndDialog('😢 Perdu !', 'Le mot était : ${_currentWord.word}');
     }
   }
 
   bool _hasWon() {
-    return _wordToGuess
+    return _currentWord.word
         .split('')
         .every((letter) => _guessedLetters.contains(letter));
   }
@@ -99,6 +100,15 @@ class _GameScreenState extends State<GameScreen> {
       body: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
+          //indice
+          Text(
+            'Catégorie: ${_currentWord.category}',
+            style: TextStyle(
+              fontSize: 18, 
+              fontStyle: FontStyle.italic,
+              color: Colors.deepPurple,
+            ),
+          ),
           //nombre d'erreurs
           Text(
             'Erreurs: $_errors / $_maxErrors',
