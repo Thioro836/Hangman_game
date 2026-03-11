@@ -44,7 +44,50 @@ class _GameScreenState extends State<GameScreen> {
         _errors++;
       }
     });
+    if (_hasWon()) {
+      _showEndDialog('🎉 Bravo !', 'Vous avez trouvé le mot : $_wordToGuess');
+    } else if (_hasLost()) {
+      _showEndDialog('😢 Perdu !', 'Le mot était : $_wordToGuess');
+    }
   }
+
+  bool _hasWon() {
+    return _wordToGuess
+        .split('')
+        .every((letter) => _guessedLetters.contains(letter));
+  }
+
+  bool _hasLost() {
+    return _errors >= _maxErrors;
+  }
+
+  void _showEndDialog(String title, String message) {
+    showDialog(
+      context: context,
+      barrierDismissible: false,
+      builder: (context) => AlertDialog(
+        title: Text(title),
+        content: Text(message),
+        actions: [
+          TextButton(
+            onPressed: () {
+              Navigator.pop(context);
+              _startNewGame();
+            },
+            child: Text('Rejouer'),
+          ),
+          TextButton(
+            onPressed: () {
+              Navigator.pop(context);
+              Navigator.pop(context);
+            },
+            child: Text('Quitter'),
+          ),
+        ],
+      ),
+    );
+  }
+
 
   @override
   Widget build(BuildContext context) {
