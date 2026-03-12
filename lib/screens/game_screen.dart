@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'dart:math';
 import 'package:hangman_game/data/word_list.dart';
 import 'package:hangman_game/models/word.dart';
+import 'package:hangman_game/widgets/hangman_painter.dart';
 
 class GameScreen extends StatefulWidget {
   const GameScreen({super.key});
@@ -109,6 +110,13 @@ class _GameScreenState extends State<GameScreen> {
               color: Colors.deepPurple,
             ),
           ),
+          SizedBox(height: 10),
+            // dessin du pendu
+          CustomPaint(
+            painter: HangmanPainter(errors: _errors),
+            size: Size(200, 200),
+          ),
+          SizedBox(height: 10),
           //nombre d'erreurs
           Text(
             'Erreurs: $_errors / $_maxErrors',
