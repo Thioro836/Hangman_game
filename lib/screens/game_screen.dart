@@ -93,6 +93,7 @@ class _GameScreenState extends State<GameScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final bool isGameOver = _hasWon() || _hasLost();
     return Scaffold(
       appBar: AppBar(
         title: Text('Jeu du Pendu'),
@@ -141,7 +142,7 @@ class _GameScreenState extends State<GameScreen> {
             children: 'ABCDEFGHIJKLMNOPQRSTUVWXYZ'.split('').map((letter) {
               final isGuessed = _guessedLetters.contains(letter);
               return ElevatedButton(
-                onPressed: isGuessed ? null : () => _guessLetter(letter),
+                onPressed: (isGuessed || isGameOver) ? null : () => _guessLetter(letter),
                 style: ElevatedButton.styleFrom(
                   backgroundColor: isGuessed ? Colors.grey : Colors.deepPurple,
                   minimumSize: Size(40, 40),
